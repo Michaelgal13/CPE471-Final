@@ -250,7 +250,7 @@ vector <missile> missileList;
 class player : public gameObject {
 public:
    //plane metric
-   float maxSpeed = 1.0f;
+   float maxSpeed = 2.5f;
    glm::vec3 OOBBPoshitboxdef[8] = {
       glm::vec3(-15, -5, -40),
       glm::vec3(-15, -5, 40),
@@ -1749,6 +1749,9 @@ void player::update(float frametime) {
    if (planeState == 0) {
       zAcceleration = -50 * (zAcc + 1) + 50 * (zDec + 1);
       zSpe = zSpe + zAcceleration * frametime;
+      if (zSpe < -0.4) {
+         zSpe += 0.0005;
+      }
       if (zSpe > maxSpeed) {
          zSpe = maxSpeed;
       }
@@ -2378,6 +2381,9 @@ bool player::OOBBColCheck(enemBall enemy) {
    playerProjMin = playerProj;
    enemyProjMax = enemyProj;
    enemyProjMin = enemyProj;
+   if (enemy.ballState != 0) {
+      return false;
+   }
    for (int i = 1; i < 8; i++) {
       playerProj = glm::dot(this->OOBBPoshitbox[i], this->norm1);
       enemyProj = glm::dot(enemy.OOBBPoshitbox[i], this->norm1);
